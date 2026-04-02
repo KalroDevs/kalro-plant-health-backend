@@ -11,6 +11,58 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+import os
+import sys
+import environ
+from datetime import timedelta
+from django.contrib.messages import constants as messages
+from django.core.exceptions import ImproperlyConfigured
+
+
+# ============================================================================
+# ENVIRONMENT CONFIGURATION
+# ============================================================================
+
+# Initialize environment variables
+env = environ.Env(
+    # Set casting and default values
+    DEBUG=(bool, False),
+    SECRET_KEY=(str, 'django-insecure-default-key-change-in-production'),
+    ALLOWED_HOSTS=(list, []),
+    CORS_ALLOWED_ORIGINS=(list, []),
+    DATABASE_URL=(str, 'sqlite:///db.sqlite3'),
+    REDIS_URL=(str, 'redis://localhost:6379'),
+    EMAIL_URL=(str, 'console://'),
+    SENTRY_DSN=(str, ''),
+    ENVIRONMENT=(str, 'development'),
+    
+    # Database settings
+    DB_NAME=(str, 'kalro_plant_health_db'),
+    DB_USER=(str, 'postgres'),
+    DB_PASSWORD=(str, 'postgres'),
+    DB_HOST=(str, 'localhost'),
+    DB_PORT=(str, '5432'),
+    
+    # Email settings
+    EMAIL_HOST=(str, 'smtp.gmail.com'),
+    EMAIL_PORT=(int, 587),
+    EMAIL_HOST_USER=(str, ''),
+    EMAIL_HOST_PASSWORD=(str, ''),
+    EMAIL_USE_TLS=(bool, True),
+    
+    # API settings
+    API_BASE_URL=(str, 'http://localhost:8000/api'),
+    API_RATE_LIMIT=(int, 100),
+    
+    # Cache settings
+    CACHE_TTL=(int, 300),
+    
+    # File upload
+    MAX_UPLOAD_SIZE=(int, 10485760),  # 10MB
+    ALLOWED_UPLOAD_EXTENSIONS=(list, ['.csv', '.xlsx', '.xls', '.json']),
+)
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -45,6 +97,7 @@ INSTALLED_APPS = [
 
     'core',
     'api',
+
 ]
 
 MIDDLEWARE = [
@@ -81,14 +134,28 @@ WSGI_APPLICATION = 'kalro_plant_health.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': env('DB_NAME'),
+            'USER': env('DB_USER'),
+            'PASSWORD': env('DB_PASSWORD'),
+            'HOST': env('DB_HOST'),
+            'PORT': env('DB_PORT'),
+            'ATOMIC_REQUESTS': True,
+            'CONN_MAX_AGE': 600,
+            'OPTIONS': {
+                'connect_timeout': 10,
+            },
+        }
 }
-
-
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 
