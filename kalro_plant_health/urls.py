@@ -4,7 +4,6 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 
-
 admin.site.site_title = "KALRO Plant Health"
 admin.site.site_header = "KALRO Plant Health Administration Portal"
 admin.site.index_title = "KALRO Plant Health Welcome to the Dashboard"
@@ -12,7 +11,8 @@ admin.site.index_title = "KALRO Plant Health Welcome to the Dashboard"
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('core.urls')),
+    path('api/', include('api.urls')),
+    path('api-auth/', include('rest_framework.urls')),
 ]
 
 if settings.DEBUG:
