@@ -141,26 +141,26 @@ WSGI_APPLICATION = 'kalro_plant_health.wsgi.application'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 # Use environment variable for database configuration
-DATABASES = {
-    'default': env.db_url('DATABASE_URL', default=f'sqlite:///{BASE_DIR}/db.sqlite3')
-}
-
-# If you specifically want PostgreSQL (uncomment and comment the above)
 # DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': env('DB_NAME'),
-#         'USER': env('DB_USER'),
-#         'PASSWORD': env('DB_PASSWORD'),
-#         'HOST': env('DB_HOST'),
-#         'PORT': env('DB_PORT'),
-#         'ATOMIC_REQUESTS': True,
-#         'CONN_MAX_AGE': 600,
-#         'OPTIONS': {
-#             'connect_timeout': 10,
-#         },
-#     }
+#     'default': env.db_url('DATABASE_URL', default=f'sqlite:///{BASE_DIR}/db.sqlite3')
 # }
+
+# Do not want PostgreSQL (uncomment and comment the above)
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD'),
+        'HOST': env('DB_HOST'),
+        'PORT': env('DB_PORT'),
+        'ATOMIC_REQUESTS': True,
+        'CONN_MAX_AGE': 600,
+        'OPTIONS': {
+            'connect_timeout': 10,
+        },
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
@@ -194,12 +194,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = [BASE_DIR / 'static']
+# STATIC_URL = '/static/'
+# STATIC_ROOT = BASE_DIR / 'staticfiles'
+# STATICFILES_DIRS = [BASE_DIR / 'static']
+
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "static"
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
